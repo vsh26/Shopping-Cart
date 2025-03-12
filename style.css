@@ -169,3 +169,16 @@ body.show-cart .container{
 .cart-list::-webkit-scrollbar{
     width: 0;
 }
+
+/* Responsiveness */
+@media screen and (max-width: 992px){
+    .product-list{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media  screen and (max-width: 768px) {
+    .product-list{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
