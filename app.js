@@ -60,20 +60,20 @@ const addToCart = (productID) => {
 
     let positionThisProductInCart = carts.findIndex((value) => value.productID == productID );
 
-    if(cartIconSpan.length <=0 ){
+    if(carts.length <=0 ){
         carts = [{
             productID: productID,
             quantity: 1
-        }]
+        }];
     }else if(positionThisProductInCart < 0){
         carts.push({
             productID: productID,
             quantity: 1
-        })
+        });
     } else {
         carts[positionThisProductInCart].quantity += 1;
     }
-    console.log(carts);
+    // console.log(carts);
 
     addCartToHTML();
     addCartToMemory();
@@ -95,8 +95,9 @@ const addCartToHTML = () => {
 
             let newCart = document.createElement('div');
             newCart.classList.add('cart-item');
+            newCart.dataset.id = cart.productID;
 
-            let positionProduct = productList.findIndex(value => value.id == cart.productID);
+            let positionProduct = productList.findIndex((value) => value.id == cart.productID);
             let info = productList[positionProduct];
             
             newCart.innerHTML = `
@@ -122,6 +123,43 @@ const addCartToHTML = () => {
     cartIconSpan.innerText = totalQuantity;
 }
 
+cartListHTML.addEventListener('click', (event) => {
+    let positionClick = event.target;
+
+    if(positionClick.classList.contains('minus') || positionClick.classList.contains('plus')){
+        let productID = positionClick.parentElement.parentElement.dataset.id;
+        // console.log(productID);
+        
+        let type = 'minus';
+
+        if(positionClick.classList.contains('plus')){
+            type = 'plus';
+        }
+        changeQunatity(productID, type);
+    }
+})
+
+const changeQunatity = (productID, type) => {
+    let positionItemInCart = carts.findIndex((value) => value.productID == productID);
+
+    if(positionItemInCart >= 0){
+        switch(type){
+            case 'plus':
+                carts[positionItemInCart].quantity += 1;
+                break;
+            default:
+                let valueChange = carts[positionItemInCart].quantity -1;
+                if(valueChange > 0){
+                    carts[positionItemInCart].quantity = valueChange;
+                }else{
+                    carts.splice(positionItemInCart, 1);
+                }
+                break;
+        }
+    }
+    addCartToMemory();
+    addCartToHTML();
+}
 
 // As soon as webpage loads
 const initApp = () => {
@@ -131,15 +169,14 @@ const initApp = () => {
         .then(response => response.json())
         .then(data => {
             productList = data;
-            console.log(productList);
+            // console.log(productList);
             addDataToHTML();
+
+            //get cart from memory
+            if(localStorage.getItem('cart')){
+                carts  = JSON.parse(localStorage.getItem('cart'));
+                addCartToHTML();
+            }
         });
-
-        //get cart from memory
-        if(localStorage.getItem('cart')){
-            carts  = JSON.parse(localStorage.getItem('cart'));
-            addCartToHTML();
-        }
-
 }
 initApp();
