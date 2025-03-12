@@ -12,6 +12,7 @@ body{
     margin: auto;
     text-align: center;
     padding-top: 10px;
+    transition: transform .5s;
 }
 
 svg{
@@ -91,10 +92,20 @@ header{
     right: 0;
     bottom: 0; */
     /* inset: top right bottom left */
-    inset: 0 0 0 auto;
+    /* inset: 0 0 0 auto; */
+    inset: 0 -400px 0 auto;
 
     display: grid;
     grid-template-rows: 70px 1fr 70px;
+    transition: .5s;
+}
+
+body.show-cart .cart-tab{
+    inset: 0 0 0 auto;
+}
+
+body.show-cart .container{
+    transform: translateX(-250px);
 }
 
 .cart-tab h1{
@@ -153,4 +164,8 @@ header{
 
 .cart-list{
     overflow: auto;
+}
+
+.cart-list::-webkit-scrollbar{
+    width: 0;
 }
